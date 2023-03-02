@@ -19,8 +19,17 @@ public class Main {
             String msg = scanner.nextLine();
             output.writeUTF(msg);
             String receivedMsg = input.readUTF();
-
             System.out.println(receivedMsg);
+
+            while (!msg.equals("bye")){
+                msg = scanner.nextLine();
+                output.writeUTF(msg);
+                if (!msg.equals("bye")) {
+                    receivedMsg = input.readUTF();
+                    System.out.println(receivedMsg);
+                }
+            }
+
         }catch (IOException e){
             e.printStackTrace();
         }
