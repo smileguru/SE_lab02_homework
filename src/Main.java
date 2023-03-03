@@ -1,17 +1,27 @@
-import java.util.Scanner;
+import java.io.*;
+        import java.net.Socket;
+        import java.util.Scanner;
 
 public class Main {
-    public static void V0(Double x, Double y){
-        Double fc = 3*Math.pow(Math.cos(x-Math.PI/6),2);
-        Double fs = 0.5+Math.sin(Math.pow(y,2));
-        System.out.println(fc/fs);
-    }
+    private static final String SERVER_ADDRESS = "127.0.0.1";
+    private static final int SERVER_PORT = 34522;
+
     public static void main(String[] args) {
-        System.out.println("Hello, Vasia");
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("¬ведите 2 вещественных числа:");
-        Double x = scanner.nextDouble();
-        Double y = scanner.nextDouble();
-        V0(x,y);
+        try (
+                Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                DataInputStream input = new DataInputStream(socket.getInputStream());
+                DataOutputStream output  = new DataOutputStream(socket.getOutputStream())
+        ) {
+            Scanner scanner = new Scanner(System.in);
+            for (int i = 0; i<2;i++) {
+                double msg = scanner.nextDouble();
+                output.writeUTF(String.valueOf(msg));
+            }
+            String receivedMsg = input.readUTF();
+
+            System.out.println("Received from the server: " + receivedMsg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
